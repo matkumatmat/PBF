@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Product Information</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #718096; }
+
+        /* Sembunyikan scrollbar di galeri mobile */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* --- Magic untuk Tabel Responsif --- */
+        /* PERUBAHAN: Breakpoint diubah ke 'lg' (1024px) agar di desktop tetap jadi tabel */
+        @media (max-width: 1023px) { 
+            .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+
+            /* Sembunyikan header tabel di mobile/tablet */
+            .responsive-table thead {
+                display: none;
+            }
+            /* Ubah baris jadi kartu */
+            .responsive-table tr {
+                display: block;
+                margin-bottom: 1rem;
+                border-radius: 0.5rem;
+                border: 1px solid #374151; /* gray-700 */
+                padding: 1rem;
+                box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            }
+            /* Ubah sel jadi baris di dalam kartu */
+            .responsive-table td {
+                display: block;
+                text-align: right;
+                padding-left: 50%; /* Kasih ruang untuk label */
+                position: relative;
+                border-bottom: 1px solid #374151; /* gray-700 */
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+            }
+            .responsive-table td:not(:last-child) {
+                margin-bottom: 0.5rem;
+            }
+            /* Hapus border di sel terakhir */
+            .responsive-table td:last-child {
+                border-bottom: 0;
+            }
+            /* Buat label dari data-label attribute */
+            .responsive-table td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 45%;
+                padding-right: 0.5rem;
+                text-align: left;
+                font-weight: 600;
+                color: #9ca3af; /* gray-400 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== Header Start (Dipertahankan) ===== -->
+    <header class="bg-gray-900/80 backdrop-blur-sm fixed top-0 left-0 w-full z-50 transition-all duration-300">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="#" class="flex-shrink-0">
+                    <div class="flex items-center gap-2">
+                         <svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                         <span class="text-xl font-bold text-white">PBF Biofarma</span>
+                    </div>
+                </a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-gray-300 hover:text-indigo-400 transition">Stock</a>
+                    <a href="#" class="text-gray-300 hover:text-indigo-400 transition">Pengiriman</a>
+                    <a href="#" class="text-gray-300 hover:text-indigo-400 transition">Dokumentasi</a>
+                    <a href="#" class="text-gray-300 hover:text-indigo-400 transition">Labeling</a>
+                    <a href="#" class="text-gray-300 hover:text-indigo-400 transition">Laporan</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm font-medium text-white">Hi, Admin</span>
+                        <img class="h-10 w-10 rounded-full" src="https://placehold.co/100x100/7e22ce/ffffff?text=A" alt="User avatar">
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Stock</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Pengiriman</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Dokumentasi</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Labeling</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Laporan</a>
+            </div>
+        </div>
+    </header>
+    <main class="min-h-screen flex flex-wrap justify-center items-center bg-gray-900 p-4 gap-8">
+        <section id="productInfo" class="w-full max-w-lg lg:max-w-4xl mt-[80px]">
+            
+            <div class="flex flex-col md:flex-row bg-gray-800 border border-gray-700 rounded-xl shadow-2xl overflow-hidden md:h-[480px]">
+
+                <!-- Kolom Kiri: Galeri Gambar (Scroll di Mobile, Grid di Desktop) -->
+                <div class="w-full md:w-1/2 p-4">
+                    <div class="flex space-x-3 overflow-x-auto snap-x snap-mandatory hide-scrollbar md:grid md:grid-cols-2 md:grid-rows-2 md:gap-2 md:space-x-0">
+                        
+                        <div class="w-full flex-shrink-0 snap-center aspect-square md:w-auto md:aspect-auto bg-gray-700 rounded-lg overflow-hidden">
+                            <img src="https://cdn.medbiz.id/media/catalog/product/cache/674bf30ba0631bd7f7d81bfd74432077/6/3/631028550fee4_1.png" alt="Gambar Stok 1" class="w-full h-full object-cover transition-transform duration-300 hover:scale-110">
+                        </div>
+                        <div class="w-full flex-shrink-0 snap-center aspect-square md:w-auto md:aspect-auto bg-gray-700 rounded-lg overflow-hidden">
+                            <img src="https://cdn.medbiz.id/media/catalog/product/cache/674bf30ba0631bd7f7d81bfd74432077/6/3/631028550fee4_1.png" alt="Gambar Stok 1" class="w-full h-full object-cover transition-transform duration-300 hover:scale-110">
+                        </div>
+                        <div class="w-full flex-shrink-0 snap-center aspect-square md:w-auto md:aspect-auto bg-gray-700 rounded-lg overflow-hidden">
+                            <img src="https://cdn.medbiz.id/media/catalog/product/cache/674bf30ba0631bd7f7d81bfd74432077/6/3/631028550fee4_1.png" alt="Gambar Stok 1" class="w-full h-full object-cover transition-transform duration-300 hover:scale-110">
+                        </div>
+                        
+                        <div class="relative w-full flex-shrink-0 snap-center aspect-square md:w-auto md:aspect-auto bg-gray-700 rounded-lg overflow-hidden group">
+                             <img src="https://cdn.medbiz.id/media/catalog/product/cache/674bf30ba0631bd7f7d81bfd74432077/6/3/631028550fee4_1.png" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+                             <div class="absolute inset-0 bg-black/60 flex items-center justify-center">
+                                 <span class="text-white text-xl font-bold">+5 lainnya</span>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kolom Kanan: Info Stok (Scrollable) -->
+                <div class="w-full md:w-1/2 p-6 flex flex-col">
+                    <!-- Bagian Header (Tidak ikut scroll) -->
+                    <div>
+                        <h1 class="text-2xl lg:text-3xl font-bold text-white leading-tight">
+                            Vaksin Bivalent Oral Polio Vaccines (BOPV)
+                        </h1>
+                        <p class="text-sm text-indigo-400 font-medium mt-1">ID Stok: #Reg-14AA01</p>
+                    </div>
+                    
+                    <!-- AREA SCROLLABLE -->
+                    <div class="flex-1 mt-4 pr-2 space-y-4 overflow-y-auto custom-scrollbar">
+                        
+                        <!-- PERUBAHAN DI SINI: Detail Teknis dengan sistem buka-tutup -->
+                        <div class="text-sm">
+                            <p class="font-semibold text-gray-400 mb-2">Detail Teknis</p>
+                            <ul class="space-y-2">
+                                <li class="flex justify-between text-gray-300"><span>Kode Produk:</span> <span class="font-mono bg-gray-700 px-2 py-0.5 rounded">AHPVA401AC</span></li>
+                                <li class="flex justify-between text-gray-300"><span>Batch ID:</span> <span class="font-mono bg-gray-700 px-2 py-0.5 rounded">BCH-XYZ-0625</span></li>
+                                <li class="flex justify-between text-gray-300"><span>Lokasi Produk:</span> <span class="font-mono">107-CCel-14</span></li>
+                                <li class="flex justify-between text-gray-300"><span>Stok Saat Ini:</span> <span class="font-bold text-green-400">8000</span></li>
+                            </ul>
+
+                            <!-- Detail Tambahan (Hidden by default) -->
+                            <div id="more-details" class="hidden mt-2 space-y-2">
+                                <ul class="space-y-2">
+                                    <li class="flex justify-between text-gray-300 items-start">
+                                        <span class="flex-shrink-0">Lokasi Rak:</span> 
+                                        <span class="font-mono text-right truncate" title="AA.1.2 ; AA.2.2 ; AB.1.2 ; AA.1.2 ; AA.2.2 ; AB.1.2">AA.1.2 ; AA.2.2 ; AB.1.2 ...</span>
+                                    </li>
+                                    <li class="flex justify-between text-gray-300"><span>Dimensi (PxLxT):</span> <span class="font-mono">120x80x55 cm</span></li>
+                                    <li class="flex justify-between text-gray-300"><span>Berat:</span> <span class="font-mono">15.7 kg</span></li>
+                                    <li class="flex justify-between text-gray-300"><span>Jumlah Penerimaan:</span> <span class="font-mono">20000</span></li>
+                                    <li class="flex justify-between text-gray-300"><span>Jumlah Distribusi:</span> <span class="font-mono">12000</span></li>
+                                    <li class="flex justify-between text-gray-300"><span>Stok Siap Kirim:</span> <span class="font-mono">4500</span></li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Tombol Toggle -->
+                            <button id="toggle-details-btn" class="text-indigo-400 text-xs font-semibold mt-3 hover:underline">
+                                Tampilkan Lebih Banyak
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <!-- Tombol Aksi (Tidak ikut scroll) -->
+                    <div class="mt-4 pt-4 border-t border-gray-700"><button id="open-modal-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105">Kalkulator Stok</button></div>
+
+                </div>
+
+            </div>
+        </section>  
+        <!-- SECTION 2: TABEL LOG PRODUK -->
+        <section id="productLog" class="w-full max-w-lg lg:max-w-7xl">
+            <!-- PERUBAHAN DI SINI: Header Section Log -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                <h2 class="text-2xl font-bold text-white">Log Aktivitas Produk</h2>
+                
+                <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+                    <!-- Search Bar -->
+                    <div class="relative w-full sm:w-64">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                        <input type="text" id="table-search" class="w-full pl-10 p-2.5 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="Cari log...">
+                    </div>
+                    
+                    <!-- Tombol Export -->
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <button class="w-full sm:w-auto flex items-center justify-center gap-2 bg-green-500 hover:bg-green-800 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M2 3a1 1 0 011-1h14a1 1 0 011 1v1a1 1 0 01-1 1H3a1 1 0 01-1-1V3zM3 7a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 11a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" />
+                            </svg>
+                            <span>Excel</span>
+                        </button>
+                        <button class="w-full sm:w-auto flex items-center justify-center gap-2 bg-red-700 hover:bg-red-800 text-white font-semibold py-2 px-4 rounded-lg transition duration-300">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2H6a2 2 0 01-2-2V4zm2 4a1 1 0 100 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                            </svg>
+                            <span>PDF</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class=" border-gray-700 rounded-xl shadow-2xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table id="log-table" class="w-full text-sm text-left text-gray-300 responsive-table">
+                        <thead class="text-xs text-gray-400 uppercase bg-gray-700/50 whitespace-nowrap">
+                            <tr>
+                                <th scope="col" class="px-8 py-3">Tanggal</th>
+                                <th scope="col" class="px-4 py-3">Kode Produk</th>
+                                <th scope="col" class="px-4 py-3">Nama Produk</th>
+                                <th scope="col" class="px-12 py-3">Batch</th>
+                                <th scope="col" class="px-4 py-3">Lokasi Produk</th>
+                                <th scope="col" class="px-4 py-3">Lokasi Rak</th>
+                                <th scope="col" class="px-4 py-3">Tipe</th>
+                                <th scope="col" class="px-4 py-3">Jumlah</th>
+                                <th scope="col" class="px-4 py-3">Stok Akhir</th>
+                                <th scope="col" class="px-4 py-3">User</th>
+                                <th scope="col" class="px-4 py-3">Keterangan</th>
+                                <th scope="col" class="px-4 py-3">Dimensi Kirim</th>
+                                <th scope="col" class="px-4 py-3">Berat Kirim</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-gray-800 border-b border-gray-700/50">
+                                <td data-label="Tanggal" class="px-4 py-2">29 Jun 2025, 10:30</td>
+                                <td data-label="Kode Produk" class="px-4 py-2">AHPVA401AC</td>
+                                <td data-label="Nama Produk" class="px-4 py-2">Nama Produk Stok</td>
+                                <td data-label="Batch" class="px-4 py-2">BCH-XYZ-0625</td>
+                                <td data-label="Lokasi Produk" class="px-4 py-2">107-CCel-14</td>
+                                <td data-label="Lokasi Rak" class="px-4 py-2">AA.1.2</td>
+                                <td data-label="Tipe" class="px-4 py-2"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-900 text-green-300">MASUK</span></td>
+                                <td data-label="Jumlah" class="px-4 py-2 font-bold text-green-400">+20000</td>
+                                <td data-label="Stok Akhir" class="px-4 py-2">20000</td>
+                                <td data-label="User" class="px-4 py-2">admin_gudang</td>
+                                <td data-label="Keterangan" class="px-4 py-2">Penerimaan dari Industri Farmasi</td>
+                                <td data-label="Dimensi Kirim" class="px-4 py-2">-</td>
+                                <td data-label="Berat Kirim" class="px-4 py-2">-</td>
+                            </tr>
+                            <tr class="bg-gray-800 border-b border-gray-700/50">
+                                <td data-label="Tanggal" class="px-4 py-2">29 Jun 2025, 14:15</td>
+                                <td data-label="Kode Produk" class="px-4 py-2">AHPVA401AC</td>
+                                <td data-label="Nama Produk" class="px-4 py-2">Nama Produk Stok</td>
+                                <td data-label="Batch" class="px-4 py-2">BCH-XYZ-0625</td>
+                                <td data-label="Lokasi Produk" class="px-4 py-2">107-CCel-14</td>
+                                <td data-label="Lokasi Rak" class="px-4 py-2">AA.1.2</td>
+                                <td data-label="Tipe" class="px-4 py-2"><span class="px-2 py-1 text-xs font-medium rounded-full bg-red-900 text-red-300">KELUAR</span></td>
+                                <td data-label="Jumlah" class="px-4 py-2 font-bold text-red-400">-5000</td>
+                                <td data-label="Stok Akhir" class="px-4 py-2">15000</td>
+                                <td data-label="User" class="px-4 py-2">sales_jakarta</td>
+                                <td data-label="Keterangan" class="px-4 py-2">Distribusi ke Kimia Farma Jakarta</td>
+                                <td data-label="Dimensi Kirim" class="px-4 py-2">50 Palet</td>
+                                <td data-label="Berat Kirim" class="px-4 py-2">3925 kg</td>
+                            </tr>
+                            <tr class="bg-gray-800 border-b border-gray-700/50">
+                                <td data-label="Tanggal" class="px-4 py-2">30 Jun 2025, 09:00</td>
+                                <td data-label="Kode Produk" class="px-4 py-2">AHPVA401AC</td>
+                                <td data-label="Nama Produk" class="px-4 py-2">Nama Produk Stok</td>
+                                <td data-label="Batch" class="px-4 py-2">BCH-XYZ-0625</td>
+                                <td data-label="Lokasi Produk" class="px-4 py-2">107-CCel-14</td>
+                                <td data-label="Lokasi Rak" class="px-4 py-2">AA.2.2</td>
+                                <td data-label="Tipe" class="px-4 py-2"><span class="px-2 py-1 text-xs font-medium rounded-full bg-red-900 text-red-300">KELUAR</span></td>
+                                <td data-label="Jumlah" class="px-4 py-2 font-bold text-red-400">-7000</td>
+                                <td data-label="Stok Akhir" class="px-4 py-2">8000</td>
+                                <td data-label="User" class="px-4 py-2">sales_bandung</td>
+                                <td data-label="Keterangan" class="px-4 py-2">Distribusi ke Kimia Farma Bandung</td>
+                                <td data-label="Dimensi Kirim" class="px-4 py-2">70 Palet</td>
+                                <td data-label="Berat Kirim" class="px-4 py-2">5500 kg</td>
+                            </tr>
+                             <tr class="bg-gray-800">
+                                <td data-label="Tanggal" class="px-4 py-2">30 Jun 2025, 11:00</td>
+                                <td data-label="Kode Produk" class="px-4 py-2">AHPVA401AC</td>
+                                <td data-label="Nama Produk" class="px-4 py-2">Nama Produk Stok</td>
+                                <td data-label="Batch" class="px-4 py-2">BCH-XYZ-0625</td>
+                                <td data-label="Lokasi Produk" class="px-4 py-2">107-CCel-14</td>
+                                <td data-label="Lokasi Rak" class="px-4 py-2">AB.1.2</td>
+                                <td data-label="Tipe" class="px-4 py-2"><span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-900 text-blue-300">PINDAH</span></td>
+                                <td data-label="Jumlah" class="px-4 py-2 font-bold">0</td>
+                                <td data-label="Stok Akhir" class="px-4 py-2">8000</td>
+                                <td data-label="User" class="px-4 py-2">operator_rak</td>
+                                <td data-label="Keterangan" class="px-4 py-2">Pemindahan internal ke Rak AB.1.2</td>
+                                <td data-label="Dimensi Kirim" class="px-4 py-2">-</td>
+                                <td data-label="Berat Kirim" class="px-4 py-2">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>         
+    </main>
+    <!-- PERUBAHAN: Modal Kalkulator Stok -->
+    <div id="stock-calculator-modal" class="fixed inset-0 bg-black/60 flex items-center justify-center p-4 hidden transition-opacity duration-300">
+        <div id="modal-content" class="bg-gray-800 border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-6 text-white transform scale-95 transition-transform duration-300">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Kalkulator Stok Fisik</h3>
+                <button id="close-modal-btn" class="text-gray-400 hover:text-white">&times;</button>
+            </div>
+            <!-- Modal Body -->
+            <form id="calculator-form" class="space-y-4">
+                <div>
+                    <label for="isi-bucket" class="block mb-1 text-sm font-medium text-gray-300">Isi per Bucket Full</label>
+                    <input type="number" id="isi-bucket" class="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="e.g., 1000">
+                </div>
+                <div>
+                    <label for="count-bucket" class="block mb-1 text-sm font-medium text-gray-300">Jumlah Bucket Full</label>
+                    <input type="number" id="count-bucket" class="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="e.g., 5">
+                </div>
+                <div>
+                    <label for="bucket-sisa" class="block mb-1 text-sm font-medium text-gray-300">Bucket Sisa</label>
+                    <input type="number" id="bucket-sisa" class="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="e.g., 250">
+                </div>
+                <div>
+                    <label for="box-receh" class="block mb-1 text-sm font-medium text-gray-300">Box Receh Sisa</label>
+                    <input type="number" id="box-receh" class="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="e.g., 15">
+                </div>
+                <!-- Hasil Kalkulasi -->
+                <div class="pt-4 mt-4 border-t border-gray-700">
+                    <p class="text-gray-400">Total Stok Fisik:</p>
+                    <p id="calculation-result" class="text-3xl font-bold text-green-400">0</p>
+                </div>
+            </form>
+        </div>
+    </div>    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Script untuk toggle detail produk ---
+            const toggleBtn = document.getElementById('toggle-details-btn');
+            const moreDetails = document.getElementById('more-details');
+            toggleBtn.addEventListener('click', () => {
+                const isHidden = moreDetails.classList.contains('hidden');
+                if (isHidden) {
+                    moreDetails.classList.remove('hidden');
+                    toggleBtn.textContent = 'Tampilkan Lebih Sedikit';
+                } else {
+                    moreDetails.classList.add('hidden');
+                    toggleBtn.textContent = 'Tampilkan Lebih Banyak';
+                }
+            });
+
+            // --- Script untuk truncating dinamis ---
+            function setupDynamicTruncation() {
+                const element = document.getElementById('lokasi-rak-value');
+                if (!element) return;
+                function checkAndApplyTruncate() {
+                    element.classList.remove('truncate');
+                    if (element.scrollWidth > element.clientWidth) {
+                        element.classList.add('truncate');
+                    }
+                }
+                checkAndApplyTruncate();
+                window.addEventListener('resize', checkAndApplyTruncate);
+            }
+
+            // --- Script untuk filter tabel ---
+            function setupTableFilter() {
+                const searchInput = document.getElementById('table-search');
+                const table = document.getElementById('log-table');
+                const tableRows = table.getElementsByTagName('tr');
+                if (!searchInput) return;
+                searchInput.addEventListener('keyup', function() {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    for (let i = 1; i < tableRows.length; i++) {
+                        const row = tableRows[i];
+                        const rowData = row.textContent || row.innerText;
+                        row.style.display = rowData.toLowerCase().indexOf(searchTerm) > -1 ? "" : "none";
+                    }
+                });
+            }
+
+            // --- PERUBAHAN: Script untuk Modal Kalkulator ---
+            function setupStockCalculator() {
+                const modal = document.getElementById('stock-calculator-modal');
+                const modalContent = document.getElementById('modal-content');
+                const openBtn = document.getElementById('open-modal-btn');
+                const closeBtn = document.getElementById('close-modal-btn');
+                
+                // Form elements
+                const form = document.getElementById('calculator-form');
+                const isiBucketInput = document.getElementById('isi-bucket');
+                const countBucketInput = document.getElementById('count-bucket');
+                const bucketSisaInput = document.getElementById('bucket-sisa');
+                const boxRecehInput = document.getElementById('box-receh');
+                const resultDisplay = document.getElementById('calculation-result');
+
+                if (!modal || !openBtn || !closeBtn || !form) return;
+
+                const openModal = () => {
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modal.classList.add('opacity-100');
+                        modalContent.classList.remove('scale-95');
+                        modalContent.classList.add('scale-100');
+                    }, 10);
+                };
+
+                const closeModal = () => {
+                    modalContent.classList.add('scale-95');
+                    modalContent.classList.remove('scale-100');
+                    modal.classList.remove('opacity-100');
+                    setTimeout(() => modal.classList.add('hidden'), 300);
+                };
+                
+                const calculateStock = () => {
+                    const isiBucket = parseInt(isiBucketInput.value) || 0;
+                    const countBucket = parseInt(countBucketInput.value) || 0;
+                    const bucketSisa = parseInt(bucketSisaInput.value) || 0;
+                    const boxReceh = parseInt(boxRecehInput.value) || 0;
+
+                    const total = (isiBucket * countBucket) + bucketSisa + boxReceh;
+                    resultDisplay.textContent = total.toLocaleString('id-ID');
+                };
+
+                openBtn.addEventListener('click', openModal);
+                closeBtn.addEventListener('click', closeModal);
+                modal.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        closeModal();
+                    }
+                });
+                
+                // Recalculate on any input change
+                form.addEventListener('input', calculateStock);
+            }
+
+            // Jalankan semua script
+            setupDynamicTruncation();
+            setupTableFilter();
+            setupStockCalculator();
+        });
+    </script>   
+    <footer>
+
+    </footer>
+    
+</body>
+</html>

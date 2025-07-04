@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasbor - PBF Biofarma</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PERUBAHAN: Menambahkan Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* --- Magic untuk Tabel Responsif --- */
+        @media (max-width: 1023px) { 
+            /* Sembunyikan header tabel di mobile/tablet */
+            .responsive-table thead {
+                display: none;
+            }
+            /* Ubah baris jadi kartu */
+            .responsive-table tr {
+                display: block;
+                margin-bottom: 1rem;
+                border-radius: 0.5rem;
+                border: 1px solid #374151; /* gray-700 */
+                padding: 1rem;
+                box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            }
+            /* Ubah sel jadi baris di dalam kartu */
+            .responsive-table td {
+                display: block;
+                text-align: right;
+                padding-left: 50%; /* Kasih ruang untuk label */
+                position: relative;
+                border-bottom: 1px solid #374151; /* gray-700 */
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+            }
+            .responsive-table td:not(:last-child) {
+                margin-bottom: 0.5rem;
+            }
+            /* Hapus border di sel terakhir */
+            .responsive-table td:last-child {
+                border-bottom: 0;
+                padding-bottom: 0;
+            }
+            /* Buat label dari data-label attribute */
+            .responsive-table td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 45%;
+                padding-right: 0.5rem;
+                text-align: left;
+                font-weight: 600;
+                color: #9ca3af; /* gray-400 */
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <!-- ===== Header Start (Dipertahankan) ===== -->
+    <header class="bg-gray-900/80 backdrop-blur-sm fixed top-0 left-0 w-full z-50 transition-all duration-300">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="#" class="flex-shrink-0">
+                    <div class="flex items-center gap-2">
+                         <svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                         <span class="text-xl font-bold">PBF Biofarma</span>
+                    </div>
+                </a>
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-gray-300 hover:text-indigo-400 transition">Stock</a>
+                    <a href="#" class="text-gray-300 hover:text-indigo-400 transition">Pengiriman</a>
+                    <a href="#" class="text-gray-300 hover:text-indigo-400 transition">Dokumentasi</a>
+                    <a href="#" class="text-gray-300 hover:text-indigo-400 transition">Labeling</a>
+                    <a href="#" class="text-gray-300 hover:text-indigo-400 transition">Laporan</a>
+                </div>
+                <!-- User Profile -->
+                <div class="hidden md:block">
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm font-medium">Hi, Admin</span>
+                        <img class="h-10 w-10 rounded-full" src="https://placehold.co/100x100/7e22ce/ffffff?text=A" alt="User avatar">
+                    </div>
+                </div>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Stock</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Pengiriman</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Dokumentasi</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Labeling</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Laporan</a>
+            </div>
+        </div>
+    </header>
+    <!-- ===== Header End ===== -->
+
+    <!-- ===== Main Dashboard Content Start (Diperbarui) ===== -->
+    <main class="pt-28 pb-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            
+            <!-- Dashboard Header -->
+            <section>
+                <h1 class="text-3xl font-bold">Dasbor Utama</h1>
+                <p class="text-gray-400 mt-1">Selamat datang Admin, berikut ringkasan aktivitas stok hari ini.</p>
+            </section>
+
+            <!-- KPI Cards Grid -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 flex flex-col justify-between">
+                    <div><h3 class="text-sm font-medium text-gray-400">Nilai Pengiriman Hari Ini</h3><p class="text-3xl font-bold mt-2">Rp 1.2 Miliar</p></div><p class="text-xs text-green-400 mt-4">+5.2% dari bulan lalu</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 flex flex-col justify-between">
+                    <div><h3 class="text-sm font-medium text-gray-400">Produk Masuk (Hari Ini)</h3><p class="text-3xl font-bold mt-2">1,500 <span class="text-lg font-medium text-gray-500">unit</span></p></div><p class="text-xs text-gray-400 mt-4">Total 3 pengiriman</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 flex flex-col justify-between">
+                    <div><h3 class="text-sm font-medium text-gray-400">Produk Keluar (Hari Ini)</h3><p class="text-3xl font-bold mt-2">850 <span class="text-lg font-medium text-gray-500">unit</span></p></div><p class="text-xs text-gray-400 mt-4">Total 12 pesanan</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 flex flex-col justify-between">
+                    <div><h3 class="text-sm font-medium text-gray-400">Tujuan Kirim Hari Ini</h3><p class="text-3xl font-bold mt-2 text-indigo-400">15 <span class="text-lg font-medium text-gray-500">Alamat</span></p></div><a href="#" class="text-xs text-indigo-400 hover:underline mt-4">Lihat Detail &rarr;</a>
+                </div>
+            </section>
+
+            <!-- Main Dashboard Area -->
+            <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 bg-gray-800 p-6 rounded-xl border border-gray-700">
+                    <h3 class="text-xl font-semibold mb-4">Tren Stok 30 Hari Terakhir</h3>
+                    <div class="h-80 bg-gray-700/50 rounded-lg flex items-center justify-center"><p class="text-gray-500 italic">Placeholder untuk Grafik (misal: Chart.js)</p></div>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                    <h3 class="text-xl font-semibold mb-4">Aktivitas Terbaru</h3>
+                    <ul class="space-y-5 mb-4">
+                        <li class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-green-900/50 flex-shrink-0 flex items-center justify-center"><svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div><p class="font-medium">Penerimaan dari Industri Farmasi</p><p class="text-sm text-gray-400">+500 unit - 2 jam lalu</p></div></li>
+                        <li class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-red-900/50 flex-shrink-0 flex items-center justify-center"><svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div><p class="font-medium">Distribusi ke Cabang Jakarta</p><p class="text-sm text-gray-400">-200 unit - 5 jam lalu</p></div></li>
+                        <li class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-blue-900/50 flex-shrink-0 flex items-center justify-center"><svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></div><div><p class="font-medium">Pemindahan internal</p><p class="text-sm text-gray-400">Rak A-3 ke B-1 - Kemarin</p></div></li>
+                    </ul>
+                    <a href="#" class="text-xs text-indigo-400 hover:underline mt-4">Lihat Detail &rarr;</a>
+                </div>
+            </section>
+
+            <!-- PERUBAHAN: Section Baru untuk Visualisasi Data -->
+            <section id="data-visualization">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Pie Chart -->
+                    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                        <h3 class="text-xl font-semibold mb-4">Persebaran Produk 107-CCell-14</h3>
+                        <div class="mx-auto" style="max-width: 400px; max-height: 400px;">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                        <h3 class="text-xl font-semibold mb-4">Persebaran Produk 107-CCell-5</h3>
+                        <div class="mx-auto" style="max-width: 400px; max-height: 400px;">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+                    <!-- Horizontal Bar Chart -->
+                    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                        <h3 class="text-xl font-semibold mb-4">Distribusi per Distributor (Valuasi)</h3>
+                        <div>
+                            <canvas id="horizontalBarChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabel Stok Labeling Rendah -->
+            <section id="lowStockProducts">
+                 <h2 class="text-2xl font-bold text-white mb-4">Produk dengan Labeling Rendah</h2>
+                <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-2xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-300 responsive-table">
+                            <thead class="text-xs text-gray-400 uppercase bg-gray-700/50 whitespace-nowrap">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">ID Produk</th><th scope="col" class="px-6 py-3">Nama Produk</th><th scope="col" class="px-6 py-3">Batch</th><th scope="col" class="px-6 py-3">Stok Belum Label</th><th scope="col" class="px-6 py-3">Lokasi</th><th scope="col" class="px-6 py-3 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-gray-800 border-b border-gray-700/50">
+                                    <td data-label="ID Produk" class="px-6 py-4 font-medium">PCT-500</td><td data-label="Nama Produk" class="px-6 py-4">Paracetamol 500mg</td><td data-label="Batch" class="px-6 py-4">BCH-ABC-0123</td><td data-label="Stok Belum Label" class="px-6 py-4"><span class="font-bold text-red-500">250 unit</span></td><td data-label="Lokasi" class="px-6 py-4">Gudang A, Rak C-2</td><td data-label="Aksi" class="px-6 py-4 text-center"><button class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-1 px-3 rounded-md text-xs">Proses Labeling</button></td>
+                                </tr>
+                                <tr class="bg-gray-800 border-b border-gray-700/50">
+                                    <td data-label="ID Produk" class="px-6 py-4 font-medium">AMX-250</td><td data-label="Nama Produk" class="px-6 py-4">Amoxicillin 250mg</td><td data-label="Batch" class="px-6 py-4">BCH-DEF-4567</td><td data-label="Stok Belum Label" class="px-6 py-4"><span class="font-bold text-yellow-500">550 unit</span></td><td data-label="Lokasi" class="px-6 py-4">Gudang B, Rak D-1</td><td data-label="Aksi" class="px-6 py-4 text-center"><button class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-1 px-3 rounded-md text-xs">Proses Labeling</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Daftar Stok Produk -->
+            <section id="stockList">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                    <h2 class="text-2xl font-bold text-white">Daftar Stok Produk</h2>
+                    <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+                        <div class="relative w-full sm:w-64">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"><svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div>
+                            <input type="text" id="stock-table-search" class="w-full pl-10 p-2.5 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-2 focus:ring-indigo-500 transition" placeholder="Cari produk...">
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-2xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table id="stock-table" class="w-full text-sm text-left text-gray-300 responsive-table">
+                            <thead class="text-xs text-gray-400 uppercase bg-gray-700/50 whitespace-nowrap">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Kode Produk</th><th scope="col" class="px-6 py-3">Nama Produk</th><th scope="col" class="px-6 py-3">Batch</th><th scope="col" class="px-6 py-3">Stok Saat Ini</th><th scope="col" class="px-6 py-3">Lokasi Rak</th><th scope="col" class="px-6 py-3">Expired Date</th><th scope="col" class="px-6 py-3">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-gray-800 border-b border-gray-700/50">
+                                    <td data-label="Kode Produk" class="px-6 py-4 font-medium">AHPVA401AC</td><td data-label="Nama Produk" class="px-6 py-4">Nama Produk Stok</td><td data-label="Batch" class="px-6 py-4">BCH-XYZ-0625</td><td data-label="Stok Saat Ini" class="px-6 py-4 font-bold">8000</td><td data-label="Lokasi Rak" class="px-6 py-4">AB.1.2</td><td data-label="Expired Date" class="px-6 py-4">Des 2027</td><td data-label="Status" class="px-6 py-4 whitespace-nowrap"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-900 text-green-300">Aman</span></td>
+                                </tr>
+                                <tr class="bg-gray-800 border-b border-gray-700/50">
+                                    <td data-label="Kode Produk" class="px-6 py-4 font-medium">PCT-500</td><td data-label="Nama Produk" class="px-6 py-4">Paracetamol 500mg</td><td data-label="Batch" class="px-6 py-4">BCH-ABC-0123</td><td data-label="Stok Saat Ini" class="px-6 py-4 font-bold text-red-500">25</td><td data-label="Lokasi Rak" class="px-6 py-4">Gudang A, Rak C-2</td><td data-label="Expired Date" class="px-6 py-4">Jan 2026</td><td data-label="Status" class="px-6 py-4 whitespace-nowrap"><span class="px-2 py-1 text-xs font-medium rounded-full bg-red-900 text-red-300">Stok Rendah</span></td>
+                                </tr>
+                                <tr class="bg-gray-800 border-b border-gray-700/50">
+                                    <td data-label="Kode Produk" class="px-6 py-4 font-medium">AMX-250</td><td data-label="Nama Produk" class="px-6 py-4">Amoxicillin 250mg</td><td data-label="Batch" class="px-6 py-4">BCH-DEF-4567</td><td data-label="Stok Saat Ini" class="px-6 py-4 font-bold text-yellow-500">55</td><td data-label="Lokasi Rak" class="px-6 py-4">Gudang B, Rak D-1</td><td data-label="Expired Date" class="px-6 py-4">Mar 2026</td><td data-label="Status" class="px-6 py-4 whitespace-nowrap"><span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-900 text-yellow-300">Perlu Perhatian</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabel Produk Mendekati Expire -->
+            <section id="expiringSoon">
+                <h2 class="text-2xl font-bold text-white mb-4">Produk Mendekati Expire</h2>
+                <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-2xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-300 responsive-table">
+                            <thead class="text-xs text-gray-400 uppercase bg-gray-700/50 whitespace-nowrap">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Nama Produk</th><th scope="col" class="px-6 py-3">Batch</th><th scope="col" class="px-6 py-3">Lokasi</th><th scope="col" class="px-6 py-3">Tgl Expire</th><th scope="col" class="px-6 py-3">Countdown</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-gray-800 border-b border-gray-700/50">
+                                    <td data-label="Nama Produk" class="px-6 py-4 font-medium">Vitamin C 1000mg</td><td data-label="Batch" class="px-6 py-4">BCH-GHI-8901</td><td data-label="Lokasi" class="px-6 py-4">Gudang C, Rak A-1</td><td data-label="Tgl Expire" class="px-6 py-4">25 Juli 2025</td><td data-label="Countdown" class="px-6 py-4 font-bold" data-countdown-date="2025-07-25"></td>
+                                </tr>
+                                <tr class="bg-gray-800 border-b border-gray-700/50">
+                                    <td data-label="Nama Produk" class="px-6 py-4 font-medium">Obat Batuk Sirup</td><td data-label="Batch" class="px-6 py-4">BCH-JKL-2345</td><td data-label="Lokasi" class="px-6 py-4">Gudang A, Rak E-5</td><td data-label="Tgl Expire" class="px-6 py-4">15 September 2025</td><td data-label="Countdown" class="px-6 py-4 font-bold" data-countdown-date="2025-09-15"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabel Produk Konsinyasi -->
+            <section id="consignmentList">
+                <h2 class="text-2xl font-bold text-white mb-4">Daftar Produk Konsinyasi</h2>
+                <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-2xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-300 responsive-table">
+                            <thead class="text-xs text-gray-400 uppercase bg-gray-700/50 whitespace-nowrap">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Nama Produk</th><th scope="col" class="px-6 py-3">Konsinyi</th><th scope="col" class="px-6 py-3">Valuasi (Rp)</th><th scope="col" class="px-6 py-3">Terbayarkan (Rp)</th><th scope="col" class="px-6 py-3">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-gray-800 border-b border-gray-700/50">
+                                    <td data-label="Nama Produk" class="px-6 py-4 font-medium">Alat Tes Gula Darah</td><td data-label="Konsinyi" class="px-6 py-4">Apotek Sehat Selalu</td><td data-label="Valuasi (Rp)" class="px-6 py-4">15.000.000</td><td data-label="Terbayarkan (Rp)" class="px-6 py-4">15.000.000</td><td data-label="Status" class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-900 text-green-300">Selesai</span></td>
+                                </tr>
+                                <tr class="bg-gray-800 border-b border-gray-700/50">
+                                    <td data-label="Nama Produk" class="px-6 py-4 font-medium">Masker Medis Box</td><td data-label="Konsinyi" class="px-6 py-4">Klinik Harapan Bunda</td><td data-label="Valuasi (Rp)" class="px-6 py-4">8.500.000</td><td data-label="Terbayarkan (Rp)" class="px-6 py-4">0</td><td data-label="Status" class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-900 text-yellow-300">Menunggu Pembayaran</span></td>
+                                </tr>
+                                 <tr class="bg-gray-800">
+                                    <td data-label="Nama Produk" class="px-6 py-4 font-medium">Hand Sanitizer 500ml</td><td data-label="Konsinyi" class="px-6 py-4">RS Kasih Ibu</td><td data-label="Valuasi (Rp)" class="px-6 py-4">12.000.000</td><td data-label="Terbayarkan (Rp)" class="px-6 py-4">6.000.000</td><td data-label="Status" class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-900 text-blue-300">Pending</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Daftar Produk Tender -->
+            <section id="tenderList">
+                <h2 class="text-2xl font-bold text-white mb-4">Daftar Produk Tender</h2>
+                <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-2xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-300 responsive-table">
+                            <thead class="text-xs text-gray-400 uppercase bg-gray-700/50 whitespace-nowrap">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Tender</th>
+                                    <th scope="col" class="px-6 py-3">No Kontrak</th>
+                                    <th scope="col" class="px-6 py-3">Tujuan Alokasi</th>
+                                    <th scope="col" class="px-6 py-3">Nama Produk</th>
+                                    <th scope="col" class="px-6 py-3">Batch</th>
+                                    <th scope="col" class="px-6 py-3">Jumlah Alokasi</th>
+                                    <th scope="col" class="px-6 py-3">Sisa Alokasi</th>
+                                    <th scope="col" class="px-6 py-3">Status</th>
+                                    <th scope="col" class="px-6 py-3">Lokasi Penyimpanan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-gray-800 border-b border-gray-700/50">
+                                    <td data-label="Tender" class="px-6 py-4 font-medium">Tender Kemenkes 2024</td>
+                                    <td data-label="No Kontrak" class="px-6 py-4">123/KMK/IV/2024</td>
+                                    <td data-label="Tujuan Alokasi" class="px-6 py-4">Dinkes Jabar</td>
+                                    <td data-label="Nama Produk" class="px-6 py-4">Vaksin Covid-19</td>
+                                    <td data-label="Batch" class="px-6 py-4">VC19-001A</td>
+                                    <td data-label="Jumlah Alokasi" class="px-6 py-4">100.000</td>
+                                    <td data-label="Sisa Alokasi" class="px-6 py-4 font-bold text-yellow-400">20.000</td>
+                                    <td data-label="Status" class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-900 text-yellow-300 whitespace-nowrap">Belum Kirim</span></td>
+                                    <td data-label="Lokasi Penyimpanan" class="px-6 py-4">Gudang Cold Chain</td>
+                                </tr>
+                                <tr class="bg-gray-800">
+                                    <td data-label="Tender" class="px-6 py-4 font-medium">Tender BPJS 2025</td>
+                                    <td data-label="No Kontrak" class="px-6 py-4">456/BPJS/I/2025</td>
+                                    <td data-label="Tujuan Alokasi" class="px-6 py-4">Faskes Nasional</td>
+                                    <td data-label="Nama Produk" class="px-6 py-4">Insulin Pen</td>
+                                    <td data-label="Batch" class="px-6 py-4">INSP-B002</td>
+                                    <td data-label="Jumlah Alokasi" class="px-6 py-4">50.000</td>
+                                    <td data-label="Sisa Alokasi" class="px-6 py-4 font-bold text-green-400">0</td>
+                                    <td data-label="Status" class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full bg-green-900 text-green-300">Selesai</span></td>
+                                    <td data-label="Lokasi Penyimpanan" class="px-6 py-4">Gudang D, Rak F-8</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+    <!-- ===== Main Dashboard Content End ===== -->
+
+    <!-- ===== Footer Start (Diperbarui) ===== -->
+    <footer class="bg-gray-800/50 border-t border-gray-800 mt-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm">&copy; 2025 PBF Biofarma. Semua Hak Cipta Dilindungi.</p>
+                <div class="flex space-x-4 mt-4 sm:mt-0">
+                    <a href="#" class="text-gray-500 hover:text-indigo-400 text-sm">Bantuan</a>
+                    <a href="#" class="text-gray-500 hover:text-indigo-400 text-sm">Syarat & Ketentuan</a>
+                    <a href="#" class="text-gray-500 hover:text-indigo-400 text-sm">Privasi</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- ===== Footer End ===== -->
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Script untuk mobile menu
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Generic function to filter a table
+            function setupTableFilter(inputId, tableId) {
+                const searchInput = document.getElementById(inputId);
+                const table = document.getElementById(tableId);
+                if (!searchInput || !table) return;
+                
+                const tableRows = table.getElementsByTagName('tr');
+
+                searchInput.addEventListener('keyup', function() {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    for (let i = 1; i < tableRows.length; i++) { // Start at 1 to skip header row
+                        const row = tableRows[i];
+                        const rowData = row.textContent || row.innerText;
+                        
+                        if (rowData.toLowerCase().indexOf(searchTerm) > -1) {
+                            row.style.display = "";
+                        } else {
+                            row.style.display = "none";
+                        }
+                    }
+                });
+            }
+
+            // Script untuk countdown tanggal expire
+            function setupExpirationCountdown() {
+                const countdownElements = document.querySelectorAll('[data-countdown-date]');
+                const today = new Date(); // Pakai tanggal hari ini secara dinamis
+
+                countdownElements.forEach(element => {
+                    const expireDateStr = element.getAttribute('data-countdown-date');
+                    const expireDate = new Date(expireDateStr);
+                    
+                    const diffTime = expireDate - today;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    if (diffDays <= 0) {
+                        element.textContent = 'Expired';
+                        element.classList.add('text-red-500');
+                    } else {
+                        element.textContent = `${diffDays} hari`;
+                        if (diffDays <= 30) {
+                            element.classList.add('text-red-500');
+                        } else if (diffDays <= 90) {
+                            element.classList.add('text-yellow-500');
+                        } else {
+                            element.classList.add('text-green-500');
+                        }
+                    }
+                });
+            }
+
+            // PERUBAHAN: Script untuk Chart.js
+            function setupCharts() {
+                // Konfigurasi global untuk warna font di chart
+                Chart.defaults.color = '#9ca3af'; // gray-400
+                Chart.defaults.font.family = 'Inter, sans-serif';
+
+                // 1. Pie Chart
+                const pieCtx = document.getElementById('pieChart');
+                if (pieCtx) {
+                    new Chart(pieCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Reguler', 'Tender Kemenkes', 'Titipan', 'Tersisa'],
+                            datasets: [{
+                                label: 'Persebaran Produk',
+                                data: [20, 40, 22, 18],
+                                backgroundColor: [
+                                    '#4f46e5', // indigo-600
+                                    '#16a34a', // green-600
+                                    '#d97706', // amber-600
+                                    '#4b5563'  // gray-600
+                                ],
+                                borderColor: '#1f2937', // gray-800
+                                borderWidth: 4,
+                                hoverOffset: 8
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        padding: 20,
+                                        boxWidth: 15,
+                                    }
+                                },
+                                title: {
+                                    display: false
+                                }
+                            }
+                        }
+                    });
+                }
+                
+                // 2. Horizontal Bar Chart
+                const barCtx = document.getElementById('horizontalBarChart');
+                if(barCtx) {
+                    new Chart(barCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Sagi Capri', 'Kimia Farma', 'Merapi Utama Pharma', 'Metiska', 'Pemerintah'],
+                            datasets: [{
+                                label: 'Valuasi Distribusi (dalam Miliar Rp)',
+                                data: [150, 180, 120, 90, 200],
+                                backgroundColor: [
+                                    'rgba(79, 70, 229, 0.8)',
+                                    'rgba(79, 70, 229, 0.7)',
+                                    'rgba(79, 70, 229, 0.6)',
+                                    'rgba(79, 70, 229, 0.5)',
+                                    'rgba(79, 70, 229, 0.9)'
+                                ],
+                                borderColor: '#4f46e5',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y', // Ini yang bikin jadi horizontal
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                title: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    max: 200,
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    },
+                                    ticks: {
+                                        callback: function(value, index, values) {
+                                            return 'Rp ' + value + ' M';
+                                        }
+                                    }
+                                },
+                                y: {
+                                    grid: {
+                                        display: false
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            // Setup filters for all tables
+            setupTableFilter('stock-table-search', 'stock-table');
+            
+            // Jalankan countdown
+            setupExpirationCountdown();
+
+            // Jalankan Chart
+            setupCharts();
+        });
+    </script>
+</body>
+</html>

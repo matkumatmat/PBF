@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumentasi - PBF Biofarma</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+        .file-preview-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            background-color: #4b5563; /* bg-gray-600 */
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <!-- ===== Header Start (Konsisten) ===== -->
+    <header class="bg-gray-900/80 backdrop-blur-sm sticky top-0 left-0 w-full z-50 transition-all duration-300">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="#" class="flex-shrink-0">
+                    <div class="flex items-center gap-2">
+                         <svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                         <span class="text-xl font-bold">PBF Biofarma</span>
+                    </div>
+                </a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-gray-300 hover:text-indigo-400 transition">Stock</a>
+                    <a href="#" class="text-gray-300 hover:text-indigo-400 transition">Pengiriman</a>
+                    <a href="#" class="text-indigo-400 font-semibold transition">Dokumentasi</a>
+                    <a href="#" class="text-gray-300 hover:text-indigo-400 transition">Labeling</a>
+                    <a href="#" class="text-gray-300 hover:text-indigo-400 transition">Laporan</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm font-medium">Hi, Admin</span>
+                        <img class="h-10 w-10 rounded-full" src="https://placehold.co/100x100/7e22ce/ffffff?text=A" alt="User avatar">
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Stock</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Pengiriman</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-indigo-400 bg-gray-800">Dokumentasi</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Labeling</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Laporan</a>
+            </div>
+        </div>
+    </header>
+    <!-- ===== Header End ===== -->
+
+    <!-- ===== Main Content Start ===== -->
+    <main class="pt-16 pb-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+            
+            <!-- Page Header -->
+            <section class="mt-12">
+                <h1 class="text-4xl font-bold">Pusat Dokumentasi</h1>
+                <p class="text-gray-400 mt-2">Arsipkan semua dokumen pengiriman dan produk di satu tempat.</p>
+            </section>
+
+            <!-- FORM 1: DOKUMENTASI PENGIRIMAN -->
+            <section id="pengiriman-docs">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold text-white">Dokumentasi Pengiriman</h2>
+                    <button id="open-pengiriman-modal-btn" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        <span>Arsip Baru</span>
+                    </button>
+                </div>
+                <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-2xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-300">
+                            <thead class="text-xs text-gray-400 uppercase bg-gray-700/50 whitespace-nowrap">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">SO</th>
+                                    <th scope="col" class="px-6 py-3">PS</th>
+                                    <th scope="col" class="px-6 py-3">Tanggal Kirim</th>
+                                    <th scope="col" class="px-6 py-3">Tujuan</th>
+                                    <th scope="col" class="px-6 py-3">Produk</th>
+                                    <th scope="col" class="px-6 py-3">Batch</th>
+                                    <th scope="col" class="px-6 py-3">Jumlah</th>
+                                    <th scope="col" class="px-6 py-3">Path Dokumen</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pengiriman-table-body">
+                                <!-- Data akan ditambahkan oleh JavaScript -->
+                                <tr id="no-pengiriman-data">
+                                    <td colspan="8" class="text-center py-10 text-gray-500">Belum ada arsip pengiriman.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FORM 2: DOKUMENTASI PRODUK -->
+            <section id="produk-docs">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold text-white">Dokumentasi Produk</h2>
+                    <button id="open-produk-modal-btn" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        <span>Dokumen Baru</span>
+                    </button>
+                </div>
+                <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-2xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-300">
+                            <thead class="text-xs text-gray-400 uppercase bg-gray-700/50 whitespace-nowrap">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">ID Produk</th>
+                                    <th scope="col" class="px-6 py-3">Nama Produk</th>
+                                    <th scope="col" class="px-6 py-3">Batch</th>
+                                    <th scope="col" class="px-6 py-3">Jumlah</th>
+                                    <th scope="col" class="px-6 py-3">Path Dokumen</th>
+                                </tr>
+                            </thead>
+                            <tbody id="produk-table-body">
+                                <!-- Data akan ditambahkan oleh JavaScript -->
+                                <tr id="no-produk-data">
+                                    <td colspan="5" class="text-center py-10 text-gray-500">Belum ada dokumen produk.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+    <!-- ===== Main Content End ===== -->
+
+    <!-- MODAL 1: PENGIRIMAN -->
+    <div id="pengiriman-modal" class="modal fixed inset-0 bg-black/60 flex items-center justify-center p-4 hidden z-[60] opacity-0">
+        <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-5 border-b border-gray-700">
+                <h3 class="text-xl font-bold">Form Arsip Pengiriman</h3>
+                <button id="close-pengiriman-modal-btn" class="text-gray-400 hover:text-white text-3xl">&times;</button>
+            </div>
+            <form id="pengiriman-form" class="p-6 space-y-4 overflow-y-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" name="so" placeholder="Nomor SO" class="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-lg" required>
+                    <input type="text" name="ps" placeholder="Nomor PS" class="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-lg" required>
+                    <input type="date" name="tanggalKirim" class="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-lg" required>
+                    <input type="text" name="tujuan" placeholder="Tujuan Kirim" class="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-lg" required>
+                    <input type="text" name="produk" placeholder="Nama Produk" class="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-lg" required>
+                    <input type="text" name="batch" placeholder="Nomor Batch" class="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-lg" required>
+                    <input type="number" name="jumlah" placeholder="Jumlah" class="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-lg" required>
+                </div>
+                <div class="pt-4 border-t border-gray-600">
+                    <p class="font-semibold mb-2">Upload Dokumen Terkait:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm mb-1 text-gray-400">Dokumen SO</label>
+                            <input type="file" name="fileSO" class="file-input w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-500 file:text-white hover:file:bg-indigo-600" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-1 text-gray-400">Dokumen PS</label>
+                            <input type="file" name="filePS" class="file-input w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-500 file:text-white hover:file:bg-indigo-600" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-1 text-gray-400">Catatan Pengepakan</label>
+                            <input type="file" name="filePengepakan" class="file-input w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-500 file:text-white hover:file:bg-indigo-600" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-1 text-gray-400">Surat Jalan</label>
+                            <input type="file" name="fileSuratJalan" class="file-input w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-500 file:text-white hover:file:bg-indigo-600" required>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="p-5 mt-auto border-t border-gray-700 flex justify-end">
+                <button type="submit" form="pengiriman-form" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition">Simpan Arsip</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: PRODUK -->
+    <div id="produk-modal" class="modal fixed inset-0 bg-black/60 flex items-center justify-center p-4 hidden z-[60] opacity-0">
+        <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-5 border-b border-gray-700">
+                <h3 class="text-xl font-bold">Form Dokumen Produk</h3>
+                <button id="close-produk-modal-btn" class="text-gray-400 hover:text-white text-3xl">&times;</button>
+            </div>
+            <form id="produk-form" class="p-6 space-y-4 overflow-y-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" name="idProduk" placeholder="ID Produk" class="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-lg" required>
+                    <input type="text" name="namaProduk" placeholder="Nama Produk" class="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-lg" required>
+                    <input type="text" name="batchProduk" placeholder="Batch Produk" class="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-lg" required>
+                    <input type="number" name="jumlahProduk" placeholder="Jumlah" class="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-lg" required>
+                </div>
+                <div class="pt-4 border-t border-gray-600">
+                    <p class="font-semibold mb-2">Upload Dokumen & Foto:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm mb-1 text-gray-400">Dokumen Penerimaan</label>
+                            <input type="file" name="filePenerimaan" class="file-input w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-500 file:text-white hover:file:bg-green-600" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-1 text-gray-400">Dokumen Permintaan</label>
+                            <input type="file" name="filePermintaan" class="file-input w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-500 file:text-white hover:file:bg-green-600" required>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm mb-1 text-gray-400">Foto Produk</label>
+                            <input type="file" name="fileFotoProduk" class="file-input w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-500 file:text-white hover:file:bg-green-600" accept="image/*" required>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="p-5 mt-auto border-t border-gray-700 flex justify-end">
+                <button type="submit" form="produk-form" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg transition">Simpan Dokumen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Footer Start ===== -->
+    <footer class="bg-gray-800/50 border-t border-gray-800 mt-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col sm:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm">&copy; 2025 PBF Biofarma. Semua Hak Cipta Dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+    <!-- ===== Footer End ===== -->
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Universal Modal Logic ---
+            const setupModal = (modalId, openBtnId, closeBtnId) => {
+                const modal = document.getElementById(modalId);
+                const openBtn = document.getElementById(openBtnId);
+                const closeBtn = document.getElementById(closeBtnId);
+
+                const open = () => {
+                    modal.classList.remove('hidden');
+                    setTimeout(() => modal.classList.add('opacity-100'), 10);
+                };
+
+                const close = () => {
+                    modal.classList.remove('opacity-100');
+                    setTimeout(() => modal.classList.add('hidden'), 300);
+                };
+
+                openBtn.addEventListener('click', open);
+                closeBtn.addEventListener('click', close);
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) close();
+                });
+            };
+
+            setupModal('pengiriman-modal', 'open-pengiriman-modal-btn', 'close-pengiriman-modal-btn');
+            setupModal('produk-modal', 'open-produk-modal-btn', 'close-produk-modal-btn');
+
+            // --- Form 1: Pengiriman Logic ---
+            const pengirimanForm = document.getElementById('pengiriman-form');
+            pengirimanForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(pengirimanForm);
+                const data = Object.fromEntries(formData.entries());
+
+                // Simulate path creation
+                const date = new Date(data.tanggalKirim);
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const year = date.getFullYear();
+                const day = date.getDate().toString().padStart(2, '0');
+                const formattedDate = `${day}-${month}-${year}`;
+                const folderBulan = `${month}-${year}`;
+                const fileName = `${formattedDate}_${data.tujuan.replace(/\s+/g, '-')}.pdf`;
+                const path = `/arsip/${folderBulan}/${fileName}`;
+
+                const tableBody = document.getElementById('pengiriman-table-body');
+                document.getElementById('no-pengiriman-data')?.remove();
+                
+                const newRow = tableBody.insertRow();
+                newRow.className = 'bg-gray-800 border-b border-gray-700/50';
+                newRow.innerHTML = `
+                    <td class="px-6 py-4">${data.so}</td>
+                    <td class="px-6 py-4">${data.ps}</td>
+                    <td class="px-6 py-4">${data.tanggalKirim}</td>
+                    <td class="px-6 py-4">${data.tujuan}</td>
+                    <td class="px-6 py-4">${data.produk}</td>
+                    <td class="px-6 py-4">${data.batch}</td>
+                    <td class="px-6 py-4">${data.jumlah}</td>
+                    <td class="px-6 py-4 text-indigo-400 text-xs hover:underline cursor-pointer">${path}</td>
+                `;
+                
+                pengirimanForm.reset();
+                document.getElementById('close-pengiriman-modal-btn').click();
+            });
+
+            // --- Form 2: Produk Logic ---
+            const produkForm = document.getElementById('produk-form');
+            produkForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(produkForm);
+                const data = Object.fromEntries(formData.entries());
+
+                // Simulate path creation
+                const path = `/dokumen-produk/${data.idProduk}_${data.batchProduk}.zip`;
+
+                const tableBody = document.getElementById('produk-table-body');
+                document.getElementById('no-produk-data')?.remove();
+                
+                const newRow = tableBody.insertRow();
+                newRow.className = 'bg-gray-800 border-b border-gray-700/50';
+                newRow.innerHTML = `
+                    <td class="px-6 py-4">${data.idProduk}</td>
+                    <td class="px-6 py-4">${data.namaProduk}</td>
+                    <td class="px-6 py-4">${data.batchProduk}</td>
+                    <td class="px-6 py-4">${data.jumlahProduk}</td>
+                    <td class="px-6 py-4 text-indigo-400 text-xs hover:underline cursor-pointer">${path}</td>
+                `;
+                
+                produkForm.reset();
+                document.getElementById('close-produk-modal-btn').click();
+            });
+
+            // Mobile menu script
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
